@@ -1,0 +1,70 @@
+speed: 30
+# number_of_agents: 100
+number_of_agents: 1000
+# input_data_folder: Inputs/SF_agents_100
+input_data_folder: Inputs/SF_agents_1K
+# output_folder: simulation_outputs/SF_100_oss_120b_ablation_full_stack
+output_folder: simulation_outputs/SF_1k_oss_120b_ablation_full_stack
+city_name: San Francisco, CA
+random_seed: 42
+stop_at: 2016  # 7 full days (7 * 288 ticks)
+
+time_spent_at_home: 660
+time_spent_at_restaurant: 45
+time_spent_at_work: 480
+time_spent_at_school: 360
+time_spent_at_recreation: 150
+time_spent_at_errands: 45
+
+bottom_age_to_drive: 18
+print_schedule: True
+create_activity_table: True
+
+llm_endpoint: http://127.0.0.1:8080/v1
+llm_model: openai/gpt-oss-120b
+
+survey_start_date: 2025/09/08
+summarization_period_days: 3
+
+memory_stream_max_context_memories: 6
+memory_stream_store_limit: 200
+memory_stream_recency_weight: 1.5
+memory_stream_importance_weight: 1.0
+memory_stream_relevance_weight: 1.2
+memory_stream_reflection_interval_ticks: 48
+memory_stream_reflection_memory_count: 10
+memory_stream_enable_interval_reflections: False
+memory_stream_enable_prompt_event_injection: False
+memory_stream_log_memories: True
+memory_stream_log_interactions: True
+memory_stream_include_behavior_priors: False
+memory_stream_day_planner_temperature: 1.0
+memory_stream_day_planner_top_p: 1.0
+memory_stream_decision_temperature: 1.0
+memory_stream_decision_top_p: 1.0
+memory_stream_reflection_temperature: 1.0
+memory_stream_reflection_top_p: 1.0
+
+use_day_planner: True
+memory_ablation_mode: baseline
+memory_diag_enabled: False
+memory_diag_sample_agents: all
+memory_diag_top_k: 0
+
+dwell_calibration:
+  worker:
+    typical_dwell_minutes:
+      home: 559
+      work: 420
+      restaurant: 55
+      school: 281
+      recreation: 137
+      errands: 101
+  student:
+    typical_dwell_minutes:
+      home: 590
+      work: 60
+      restaurant: 53
+      school: 364
+      recreation: 150
+      errands: 119

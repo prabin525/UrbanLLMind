@@ -1,0 +1,11 @@
+# export INFERENCE_MODEL=openai/gpt-oss-20b
+export INFERENCE_MODEL=openai/gpt-oss-120b
+export VLLM_PORT=8080
+export VLLM_IMAGE_LOC=/scratch/pbhanda2/singularity_container/vllm-openai_gptoss.sif
+export VLLM_URL='http://127.0.0.1:'$VLLM_PORT/v1
+export HF_TOKEN=hf_
+export VOLUME=/scratch/pbhanda2/huggingface
+export HF_HOME=/scratch/pbhanda2/huggingface
+export SINGULARITY_CACHEDIR=/scratch/pbhanda2/.singularity/
+export NEMO_CACHE_DIR=/scratch/pbhanda2/nemo
+export NEMO_MODELS_CACHE=/scratch/pbhanda2/nemo/models

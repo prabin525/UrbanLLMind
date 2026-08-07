@@ -1,0 +1,46 @@
+
+speed: 30
+number_of_agents: 10
+input_data_folder: InputData  # use InputData for the single-agent baseline
+random_seed: 42
+output_folder: output_files_teste
+# stop_at: 1440
+# stop_at: 288
+stop_at: 576
+# time_spent_at_home: 45                                        # in mins
+time_spent_at_home: 480
+time_spent_at_restaurant: 45                    
+time_spent_at_work: 480
+time_spent_at_school: 360
+time_spent_at_recreation: 150
+time_spent_at_errands: 45
+bottom_age_to_drive: 18
+print_schedule: True
+create_activity_table: True
+llm_endpoint: http://localhost:11434/v1
+llm_model: llama3.2:latest
+# llm_model: gemma3:4b
+survey_start_date: 2025/09/08
+summarization_period_days: 3
+memory_stream_max_context_memories: 6
+memory_stream_store_limit: 200
+memory_stream_recency_weight: 1.5
+memory_stream_importance_weight: 1.0
+memory_stream_relevance_weight: 1.2
+memory_stream_reflection_interval_ticks: 48
+memory_stream_reflection_memory_count: 10
+memory_stream_enable_interval_reflections: False
+memory_stream_log_memories: True
+memory_stream_log_interactions: True
+memory_stream_include_behavior_priors: False
+memory_stream_day_planner_temperature: 0.7
+memory_stream_day_planner_top_p: 1.0
+memory_stream_decision_temperature: 0.7
+memory_stream_decision_top_p: 1.0
+memory_stream_reflection_temperature: 0.7
+memory_stream_reflection_top_p: 1.0
+use_day_planner: False
+memory_ablation_mode: baseline
+memory_diag_enabled: False
+memory_diag_sample_agents: all
+memory_diag_top_k: 0

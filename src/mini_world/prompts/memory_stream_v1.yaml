@@ -1,0 +1,103 @@
+shared_system_prompt: >
+  You simulate one person in an urban day.
+  Keep behavior human, coherent, and realistic for time of day and day of week.
+  The agent has internal feelings (hunger, tiredness, desire to socialize, etc.)
+  that rise when neglected. These are contextual signals, not commands — a
+  working person rests on weekends even if their drive-to-work is high.
+  Use a day plan as soft guidance only, not a hard rule.
+  Day-plan format: HH:MM-HH:MM:activity[:tag];...
+  Activities: home,work,school,restaurant,recreation,errands.
+  For step decisions, output JSON only with keys next_activity_type and stay_minutes.
+
+day_planner_prompt_template: |
+  Create this person's rough day plan as one compact line.
+
+  Output exactly one line with 3-6 segments:
+    {plan_grammar_hint}
+  Allowed activities:
+    {activity_vocab}
+
+  Agent profile:
+    {agent_profile_context}
+
+  Time:
+    - day: {day_of_week}, {day}
+    - current_location: {bfrom}
+    - minutes_in_current_activity: {minutes_here}
+
+  Today timeline so far:
+    {today_activity_table}
+
+  Memory cues:
+    {memory_section}
+
+  How you're feeling:
+    - drive to work/study: {work_need}
+    - hunger: {food_need}
+    - desire to socialize: {social_need}
+    - pending errands: {errands_need}
+    - tiredness: {rest_need}
+
+  Rules:
+    - Keep segments ordered and non-overlapping.
+    - Use realistic block lengths.
+    - Include home at night unless strong context suggests otherwise.
+    - No JSON. No bullets. No extra text.
+
+decision_prompt_template: |
+  Agent profile:
+    {agent_profile_context}
+
+  Time:
+    - day: {day_of_week}, {day}
+    - current_location: {bfrom}
+    - minutes_in_current_activity: {minutes_here}
+
+  {plan_section}
+
+  Today timeline:
+    {today_activity_table}
+
+  Memory cues:
+    {memory_section}
+
+  How you're feeling:
+    - drive to work/study: {work_need}
+    - hunger: {food_need}
+    - desire to socialize: {social_need}
+    - pending errands: {errands_need}
+    - tiredness: {rest_need}
+
+  Optional priors:
+    {behavior_priors_block}
+
+  Action codes:
+    - 1: home
+    - 2: work (worker)
+    - 3: restaurant
+    - 4: school (student)
+    - 5: recreation
+    - 7: errands/other
+
+  Return JSON only:
+    {{"next_activity_type": <int>, "stay_minutes": <int>}}
+
+  Rules:
+    - Pick one coherent next activity.
+    - If a day plan is shown, follow it unless urgent needs justify deviation.
+    - stay_minutes should be a meaningful block, not tiny jitter.
+    - If continuing the current activity, return the same code with extension minutes.
+
+reflection_system_prompt: >
+  You observe a simulated person's day and identify emerging patterns
+  and routines in their behavior.
+
+reflection_prompt_template: |
+  Recent memories (most recent first):
+    {memory_dump}
+
+  Based on these memories, what daily patterns or routines do you notice?
+  Focus on 2-3 concise bullet observations:
+    - What times does this person typically eat, work, rest, or socialize?
+    - Are there recurring habits (e.g., "usually leaves for work around 8:30")?
+    - Do they have a consistent daily rhythm, or is their schedule fragmented?

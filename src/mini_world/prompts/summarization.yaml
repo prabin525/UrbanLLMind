@@ -1,0 +1,9 @@
+
+summarization_persona: >
+  You are an expert at summarizing conversations. You will be given a conversation history for an agent in a simulation. Your task is to summarize the key events, decisions, and locations from the conversation. The summary should be concise.
+
+summarization_prompt_template: >
+  Please summarize the key events, decisions, and locations from the following conversation history. The summary should be concise.
+
+  Conversation History:
+  {history}
