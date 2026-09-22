@@ -243,6 +243,7 @@ body.kiosk .sb-text { font-size: 17px; }
   .legend { display: none; }
   .story-card { top: auto; bottom: 56px; left: 8px; width: calc(100% - 16px); max-height: 52vh; overflow-y: auto; }
   .storm-banner { top: 8px; padding: 7px 10px; }
+  .leaflet-control-zoom { display: none; }    /* phones pinch-zoom; the buttons sat under the storm banner */
   .sb-text { font-size: 12.5px; }
   .speed select { padding: 4px; }
   .tl-track { height: 50px; }
