@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UrbanLLMind · 1,000 LLM agents in San Francisco</title>
+<meta name="description" content="Watch 1,000 LLM agents plan, move, remember and reflect through one simulated week in San Francisco, including two storm days. Track any agent and read its reasoning. COLM 2026.">
+<meta name="theme-color" content="#06110C">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://prabin525.github.io/UrbanLLMind/">
+<!-- link preview when the address is shared (Open Graph + Twitter/X); image paths must be absolute -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="UrbanLLMind">
+<meta property="og:title" content="UrbanLLMind · 1,000 LLM agents, one week in San Francisco">
+<meta property="og:description" content="Watch 1,000 LLM agents plan, move, remember and reflect through one simulated week in San Francisco, including two storm days. Track any agent and read its reasoning. COLM 2026.">
+<meta property="og:url" content="https://prabin525.github.io/UrbanLLMind/">
+<meta property="og:image" content="https://prabin525.github.io/UrbanLLMind/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Night map of San Francisco with 1,000 simulated agents travelling as small cars">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UrbanLLMind · 1,000 LLM agents, one week in San Francisco">
+<meta name="twitter:description" content="Watch 1,000 LLM agents plan, move, remember and reflect through one simulated week in San Francisco, including two storm days. Track any agent and read its reasoning. COLM 2026.">
+<meta name="twitter:image" content="https://prabin525.github.io/UrbanLLMind/preview.png">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-name">UrbanLLMind</span>
+    <span class="brand-sub">1,000 LLM agents · one week in San Francisco</span>
+  </div>
+  <div class="seg" id="runToggle" role="group" aria-label="Scenario">
+    <button type="button" data-run="storm">Storm<span class="hide-sm"> week</span></button>
+    <button type="button" data-run="base">No storm</button>
+  </div>
+  <div class="top-actions">
+    <button type="button" class="btn-gold" id="trackBtn" aria-haspopup="dialog" aria-expanded="false">⌖ Track<span class="hide-sm"> an agent</span></button>
+    <button type="button" class="btn-icon" id="aboutBtn" aria-label="About this visualization">?</button>
+  </div>
+</header>
+
+<div class="track-pop" id="trackPop" role="dialog" aria-label="Track an agent" hidden>
+  <div class="tp-title">Track an agent</div>
+  <form class="tp-row" id="trackForm" autocomplete="off">
+    <input id="trackInput" list="agentList" inputmode="numeric" placeholder="Agent number, e.g. 8429" aria-label="Agent number">
+    <button type="submit" class="btn-gold">Track</button>
+  </form>
+  <datalist id="agentList"></datalist>
+  <div class="tp-msg" id="trackMsg" aria-live="polite"></div>
+  <button type="button" class="btn-ghost tp-random" id="trackRandom">Random agent</button>
+  <div class="tp-hint">…or click any car or dot on the map.</div>
+  <button type="button" class="tp-tour" id="tourLink">Guided tour: agent #8429 through the storm week →</button>
+</div>
+
+<main class="layout">
+  <section class="map-wrap" id="mapWrap">
+    <div id="map" aria-label="Map of San Francisco with simulated agents"></div>
+    <div class="storm-tint" id="stormTint"></div>
+    <canvas id="rainCanvas" aria-hidden="true"></canvas>
+    <canvas id="agentsCanvas" aria-hidden="true"></canvas>
+
+    <div class="storm-banner" id="stormBanner" hidden>
+      <div class="sb-tag" id="stormTag">⛈ Storm day</div>
+      <div class="sb-text" id="stormText"></div>
+    </div>
+
+    <div class="clock" id="clock">
+      <div class="clock-time"><span id="clockDay">Mon</span> <span id="clockTime">07:00</span></div>
+      <div class="clock-sub"><b id="clockMoving">0</b> agents on the road</div>
+    </div>
+
+    <details class="legend" id="legend">
+      <summary>Legend</summary>
+      <div class="legend-body">
+        <div class="lg-row"><span class="lg-car"></span>on the way to an activity (cabin colour = destination)</div>
+        <div class="lg-row"><span class="lg-dot"></span>at a place</div>
+        <div class="lg-grid" id="legendActs"></div>
+        <div class="lg-row"><span class="lg-here"></span>COLM 2026 venue (Hilton Union Square)</div>
+      </div>
+    </details>
+
+    <button type="button" class="recenter" id="recenterBtn" hidden>⌖ Follow again</button>
+    <div class="story-card" id="storyCard" hidden></div>
+  </section>
+
+  <aside class="panel" id="panel" aria-label="Agent details">
+    <div class="panel-grip" id="panelGrip"><button type="button" class="grip-close" id="gripClose" aria-label="Stop tracking">✕</button></div>
+    <div class="panel-inner" id="panelInner"></div>
+  </aside>
+</main>
+
+<footer class="timeline" id="timeline">
+  <button type="button" class="play" id="playBtn" aria-label="Play">▶</button>
+  <div class="tl-track" id="tlTrack"><canvas id="tlCanvas" aria-label="Week timeline: agents on the road"></canvas></div>
+  <label class="speed">
+    <span class="hide-sm">Speed</span>
+    <select id="speedSel" aria-label="Playback speed">
+      <option value="1">5 min/s</option>
+      <option value="6">30 min/s</option>
+      <option value="12" selected>1 h/s</option>
+      <option value="36">3 h/s</option>
+      <option value="72">6 h/s</option>
+    </select>
+  </label>
+</footer>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div id="loadingText">Loading the city…</div>
+</div>
+
+<div class="modal" id="about" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <button type="button" class="modal-close" id="aboutClose" aria-label="Close">×</button>
+    <h2 id="aboutTitle">What you are looking at</h2>
+    <div class="about-links">
+      <a class="btn-gold" href="https://openreview.net/forum?id=jaK0A4Dzf2" target="_blank" rel="noopener">Paper (OpenReview)</a>
+      <a class="btn-ghost" href="https://github.com/prabin525/UrbanLLMind" target="_blank" rel="noopener">Code (GitHub)</a>
+    </div>
+    <p>A synthetic San Francisco built from OpenStreetMap buildings and Census data, inhabited by
+      <b>1,000 agents</b>. Every agent is an open-weight LLM (<b>GPT-OSS-120B</b>) that <b>plans</b> its day,
+      <b>decides</b> what to do next each time a stay ends, <b>remembers</b> past days, and <b>reflects</b> every night.</p>
+    <p><b>Storm week.</b> On Tuesday and Saturday one sentence is added to every agent's prompt: a storm
+      warning. Nothing else changes. Switch to <b>No storm</b> to see the same agents' week without it.</p>
+    <p id="aboutStats"></p>
+    <p><b>Track an agent</b> (or click any car or dot) to follow it and read its plans, decisions, memories and
+      reflections, word for word from the simulation logs.</p>
+    <p class="fine" id="aboutNotes"></p>
+    <p class="fine">UrbanLLMind: Scalable LLM-Powered Urban Mobility Simulation with Open-Weight Models.
+      Prabin Bhandari, Sandro M. Reia, Dieter Pfoser, Antonios Anastasopoulos (George Mason University), COLM 2026.
+      Contact: pbhanda2@gmu.edu. Map data © OpenStreetMap contributors; shoreline: U.S. Census Bureau TIGER/Line.</p>
+  </div>
+</div>
+
+<script src="vendor/leaflet.js"></script>
+<script src="js/data.js"></script>
+<script src="js/mapview.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/panel.js"></script>
+<script src="js/story.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
