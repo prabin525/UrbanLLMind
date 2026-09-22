@@ -6,7 +6,7 @@ agents, persistent memory, and distributed open-weight inference to simulate
 multi-day mobility behavior and responses to scenario interventions.
 
 - **Paper:** [UrbanLLMind: Scalable LLM-Powered Urban Mobility Simulation with
-  Open-Weight Models](https://openreview.net/forum?id=jaK0A4Dzf2) (COLM 2026)
+  Open-Weight Models](https://openreview.net/pdf?id=jaK0A4Dzf2) (COLM 2026)
 - **Live simulation:** [prabin525.github.io/UrbanLLMind](https://prabin525.github.io/UrbanLLMind/):
   1,000 LLM agents through one simulated week in San Francisco, including two
   storm days. Track any agent and read its plans, decisions, memories and
