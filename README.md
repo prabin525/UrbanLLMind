@@ -5,6 +5,13 @@ mobility. It combines a synthetic city and population, profile-grounded LLM
 agents, persistent memory, and distributed open-weight inference to simulate
 multi-day mobility behavior and responses to scenario interventions.
 
+- **Paper:** [UrbanLLMind: Scalable LLM-Powered Urban Mobility Simulation with
+  Open-Weight Models](https://openreview.net/forum?id=jaK0A4Dzf2) (COLM 2026)
+- **Live simulation:** [prabin525.github.io/UrbanLLMind](https://prabin525.github.io/UrbanLLMind/):
+  1,000 LLM agents through one simulated week in San Francisco, including two
+  storm days. Track any agent and read its plans, decisions, memories and
+  reflections.
+
 The simulation is implemented with Repast4Py and MPI. At each decision point,
 an agent uses its profile, current context, daily plan, and retrieved memories
 to select its next destination-purpose category and intended stay duration.
@@ -76,3 +83,18 @@ Simulation configurations reference these files through `input_data_folder`
 and related paths. Local data is conventionally placed under `Inputs/` and
 `dataset/`; these directories are excluded from version control because the
 underlying datasets and generated artifacts can be large.
+
+## Citation
+
+If you use our work, data, or the model, please cite our paper:
+
+```bibtex
+@inproceedings{
+bhandari2026urbanllmind,
+title={Urban{LLM}ind: Scalable {LLM}-Powered Urban Mobility Simulation with Open-Weight Models},
+author={Prabin Bhandari and Sandro M. Reia and Dieter Pfoser and Antonios Anastasopoulos},
+booktitle={Third Conference on Language Modeling},
+year={2026},
+url={https://openreview.net/forum?id=jaK0A4Dzf2}
+}
+```
