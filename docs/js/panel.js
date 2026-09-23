@@ -85,7 +85,7 @@ const Panel = (() => {
     const byTrip = new Map();
     for (const x of d.dec) if (x.tr != null) byTrip.set(x.tr, x);
     if (d.plan) {
-      parts.push({ t: d.plan.t, html: `<div class="card" data-t="${d.plan.t}" style="--c:#FFCC33">
+      parts.push({ t: d.plan.t, html: `<div class="card" data-t="${d.plan.t}" style="--c:var(--plan)">
         <div class="card-top"><span class="card-kind">Plan</span><span class="card-time">${tickLabel(d.plan.t)}</span></div>
         <div class="card-main">${esc(file.s[d.plan.x])}</div>${memList(file, d.plan.m)}${thoughtBox(file, d.plan.th)}</div>` });
     }
@@ -94,14 +94,14 @@ const Panel = (() => {
       const act = Data.ACTS[x.a] || { name: `activity ${x.a}`, color: '#9CA3AF' };
       if (x.tr != null) {
         const i = x.tr, mins = (t.arr[i] - t.dep[i]) * 5;
-        parts.push({ t: x.t, html: `<div class="card" data-t="${x.t}" data-trip="${i}" style="--c:${act.color}">
+        parts.push({ t: x.t, html: `<div class="card decide" data-t="${x.t}" data-trip="${i}" style="--c:${act.color}">
           <div class="card-top"><span class="card-kind">Decide · ${esc(act.name)}</span><span class="card-time">${tickLabel(x.t)}</span></div>
           <div class="card-main">${esc(file.s[x.x])}</div>
           <div class="card-move">→ travels to <b>${esc(act.name)}</b>, arrives ${Data.clock(t.arr[i]).text} (${mins} min) · plans to stay ~${esc(x.st)} min</div>
           ${memList(file, x.m)}${thoughtBox(file, x.th)}</div>` });
         place = x.a;
       } else if (showAll) {
-        parts.push({ t: x.t, html: `<div class="card stay" data-t="${x.t}" style="--c:${act.color}">
+        parts.push({ t: x.t, html: `<div class="card decide stay" data-t="${x.t}" style="--c:${act.color}">
           <div class="card-top"><span class="card-kind">Decide · stay${place === x.a || place == null ? '' : ' · ' + esc(act.name)}</span><span class="card-time">${tickLabel(x.t)}</span></div>
           <div class="card-main">${esc(file.s[x.x])} <span style="color:var(--muted)">(~${esc(x.st)} min)</span></div>
           ${memList(file, x.m)}${thoughtBox(file, x.th)}</div>` });
@@ -114,7 +114,7 @@ const Panel = (() => {
     });
     const ref = d.ref;
     if (ref) {
-      parts.push({ t: ref.t, html: `<div class="card" data-t="${ref.t}" style="--c:#C4B5FD">
+      parts.push({ t: ref.t, html: `<div class="card" data-t="${ref.t}" style="--c:var(--reflect)">
         <div class="card-top"><span class="card-kind">Reflect</span><span class="card-time">end of ${Data.D.meta.days[day - 1]}</span></div>
         <div class="card-main">${esc(file.s[ref.x])}</div>${memList(file, ref.m)}${thoughtBox(file, ref.th)}</div>` });
     }

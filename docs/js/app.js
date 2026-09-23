@@ -113,7 +113,12 @@ const App = (() => {
     const cs = count(s), cb = count(b), days = Data.D.meta.days;
     const parts = Data.D.meta.runs.storm.storm_days.map(d =>
       `on storm ${days[d - 1]} they make <b>${cs[d].toLocaleString()}</b> trips, ${Math.round(100 * (1 - cs[d] / cb[d]))}% fewer than the same ${days[d - 1]} without the storm (${cb[d].toLocaleString()})`);
-    $('aboutStats').innerHTML = `<b>What happens:</b> ${parts.join('; ')}.`;
+    const p = d => Math.round(Data.workSchoolShare(s, d));
+    const [sd1, sd2] = Data.D.meta.runs.storm.storm_days;               // Tue, Sat
+    $('aboutStats').innerHTML = `<b>What happens:</b> ${parts.join('; ')}. The notice says to travel less, not which trips
+      to drop: agents cut optional trips first, so <b>work and school</b> rise to <b>${p(sd1)}%</b> of out-of-home trips on storm
+      ${days[sd1 - 1]} (${p(sd1 - 1)}% ${days[sd1 - 2]}, ${p(sd1 + 1)}% ${days[sd1]}) and <b>${p(sd2)}%</b> on storm ${days[sd2 - 1]}
+      (${p(sd2 + 1)}% ${days[sd2]}).`;
   }
 
   /* ---------------- scenario ---------------- */

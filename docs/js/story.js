@@ -11,6 +11,13 @@ const Story = (() => {
     return (end > 60 ? cut.slice(0, end + 1) : cut.slice(0, cut.lastIndexOf(' '))) + ' …';
   }
   const memText = s => s.slice(s.indexOf('|', 2) + 1);
+  // "work and school rise to 45% of out-of-home trips, from 40% on Monday and Wednesday."
+  function storyShare(R) {
+    const p = d => Math.round(Data.workSchoolShare(R, d));
+    const [mon, tue, wed] = [p(1), p(2), p(3)];
+    const before = mon === wed ? `${mon}% on Monday and Wednesday` : `${mon}% on Monday and ${wed}% on Wednesday`;
+    return `work and school rise to <b>${tue}%</b> of out-of-home trips, from ${before}.`;
+  }
 
   function init(appApi) {
     app = appApi;
@@ -46,25 +53,25 @@ const Story = (() => {
     steps = [
       { title: 'Every morning, a plan', tick: mon.plan.t, day: 1, fit: trips(1),
         body: `Agent #${A.id} is a ${esc(who)}, and like every agent here it is an LLM. At the start of each day it writes a rough plan from its profile and memories.`,
-        quotes: [{ label: `Plan · Mon ${Data.clock(mon.plan.t).text}`, text: excerpt(S(mon.plan.x)) }] },
+        quotes: [{ label: `Plan · Mon ${Data.clock(mon.plan.t).text}`, text: excerpt(S(mon.plan.x)), cls: 'plan' }] },
       firstMove && { title: 'At every stop, a decision', tick: firstMove.t + 0.2, day: 1, trip: firstMove.tr, play: 1,
         body: 'Each time a stay ends, the model chooses what to do next and for how long. The simulation engine turns that choice into a trip across the city.',
-        quotes: [{ label: `Decide · Mon ${Data.clock(firstMove.t).text} → ${Data.ACTS[firstMove.a].name}`, text: excerpt(S(firstMove.x)) }] },
+        quotes: [{ label: `Decide · Mon ${Data.clock(firstMove.t).text} → ${Data.ACTS[firstMove.a].name}`, text: excerpt(S(firstMove.x)), cls: 'decide' }] },
       mon.ref && { title: 'Every night, a reflection', tick: 287.5, day: 1, fit: trips(1),
         body: 'At the end of the day it condenses what happened into a short reflection, which goes into its long-term memory.',
-        quotes: [{ label: 'Reflect · end of Monday', text: excerpt(S(mon.ref.x), 300), cls: 'memory' }] },
+        quotes: [{ label: 'Reflect · end of Monday', text: excerpt(S(mon.ref.x), 300), cls: 'reflect' }] },
       tue.plan && { title: 'Tuesday: one sentence changes', tick: tue.plan.t, day: 2, fit: trips(2),
-        body: 'On Tuesday the same sentence is added to every agent’s prompt. No storm rules are coded anywhere; the agents decide what it means for them.',
+        body: `On Tuesday the same sentence is added to every agent’s prompt. It says to travel less, not which trips to drop: ${storyShare(R)}`,
         quotes: [{ label: 'Added to every prompt', text: notice, cls: 'storm' },
-                 { label: `Plan · Tue ${Data.clock(tue.plan.t).text}`, text: excerpt(S(tue.plan.x)) }] },
+                 { label: `Plan · Tue ${Data.clock(tue.plan.t).text}`, text: excerpt(S(tue.plan.x)), cls: 'plan' }] },
       wed.plan && wed.plan.m.length && { title: 'Wednesday: remembering', tick: wed.plan.t, day: 3, fit: trips(3),
         body: 'Before planning, the agent retrieves its most relevant memories, including yesterday’s reflection.',
         quotes: [{ label: 'Remembered', text: excerpt(memText(S(wed.plan.m[0])), 280), cls: 'memory' },
-                 { label: `Plan · Wed ${Data.clock(wed.plan.t).text}`, text: excerpt(S(wed.plan.x)) }] },
+                 { label: `Plan · Wed ${Data.clock(wed.plan.t).text}`, text: excerpt(S(wed.plan.x)), cls: 'plan' }] },
       sat.plan && { title: 'Saturday: a routine, then a storm', tick: sat.plan.t, day: 6, fit: satTrips ? trips(6) : null,
         body: `By the end of the week its reflections have become a routine (“On weekdays I…”). On storm Saturday it ${satTrips ? `makes ${satTrips} trip${satTrips > 1 ? 's' : ''}` : 'stays home all day'}.`,
         quotes: [sat.plan.m.length && { label: 'Remembered', text: excerpt(memText(S(sat.plan.m[0])), 280), cls: 'memory' },
-                 { label: `Plan · Sat ${Data.clock(sat.plan.t).text}`, text: excerpt(S(sat.plan.x)) }].filter(Boolean) },
+                 { label: `Plan · Sat ${Data.clock(sat.plan.t).text}`, text: excerpt(S(sat.plan.x)), cls: 'plan' }].filter(Boolean) },
       { title: 'Your turn', tick: 288 + 8.5 * 12, day: 2, city: true, last: true,      // Tuesday 08:30
         body: 'Switch to <b>No storm</b> to see the same 1,000 agents’ Tuesday without the notice, or use <b>Track</b> (or tap any car or dot) to follow any agent.',
         quotes: [] },

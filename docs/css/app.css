@@ -9,6 +9,10 @@
   --text-soft: #C9D6CE;
   --muted: #8FA79A;
   --gold: #FFCC33;
+  /* agent stages, same as the COLM 2026 poster: PLAN teal · DECIDE gold · REFLECT violet */
+  --plan: #2DD4BF;
+  --decide: #FFCC33;
+  --reflect: #A78BFA;
   --green: #1B4D37;
   --storm: #7DD3FC;
   --here: #FF5A5F;
@@ -126,7 +130,10 @@ body.is-storm .storm-tint { opacity: 1; }
 .sc-quote { margin: 10px 0 0; padding: 8px 12px; border-left: 3px solid var(--gold); background: rgba(255,204,51,0.06);
             font-size: 14px; line-height: 1.45; color: var(--text); border-radius: 0 6px 6px 0; }
 .sc-quote.storm { border-left-color: var(--storm); background: rgba(125,211,252,0.07); }
-.sc-quote.memory { border-left-color: #C4B5FD; background: rgba(196,181,253,0.07); }
+.sc-quote.plan { border-left-color: var(--plan); background: rgba(45,212,191,0.07); }
+.sc-quote.decide { border-left-color: var(--decide); background: rgba(255,204,51,0.06); }
+.sc-quote.reflect { border-left-color: var(--reflect); background: rgba(167,139,250,0.08); }
+.sc-quote.memory { border-left-color: var(--muted); background: rgba(143,167,154,0.08); }   /* recalled memories: neutral, like the poster's MEMORY node */
 .sc-quote small { display: block; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
 .sc-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 8px; }
 .sc-dots { display: flex; gap: 5px; }
@@ -165,6 +172,7 @@ body.tracking .panel { display: flex; }
 .card.stay { padding: 6px 11px; opacity: 0.85; }
 .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .card-kind { font-size: 11px; font-weight: 900; letter-spacing: 1.1px; text-transform: uppercase; color: var(--c, var(--gold)); }
+.card.decide .card-kind { color: var(--decide); }     /* stripe keeps the destination-activity colour */
 .card-time { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
 .card-main { font-size: 14px; line-height: 1.45; margin-top: 4px; }
 .card.stay .card-main { font-size: 13px; color: var(--text-soft); }
@@ -175,7 +183,7 @@ body.tracking .panel { display: flex; }
 .card details summary:hover { color: var(--text-soft); }
 .mem { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 5px; }
 .mem li { font-size: 12.5px; line-height: 1.4; color: var(--text-soft); padding-left: 10px; border-left: 2px solid #3A5A4A; }
-.mem li.r { border-left-color: #C4B5FD; }
+.mem li.r { border-left-color: var(--reflect); }
 .mem li em { font-style: normal; color: var(--muted); font-size: 11px; font-weight: 700; margin-right: 4px; }
 .thought { white-space: pre-wrap; font-size: 12.5px; line-height: 1.45; color: var(--text-soft); background: rgba(0,0,0,0.25);
            border-radius: 6px; padding: 7px 9px; margin-top: 6px; max-height: 260px; overflow-y: auto; }

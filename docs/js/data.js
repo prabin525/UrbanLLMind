@@ -140,6 +140,18 @@ const Data = (() => {
     return out;
   }
 
+  /* Work + school share of a day's out-of-home trips (return-home trips excluded), in percent.
+   * Same measure as the poster and the paper's storm analysis (which reports work only). */
+  function workSchoolShare(R, day) {
+    let ws = 0, out = 0;
+    for (let i = 0; i < R.n; i++) {
+      if (Math.floor(R.t.arr[i] / 288) + 1 !== day || R.t.act[i] === 1) continue;
+      out++;
+      if (R.t.act[i] === 2 || R.t.act[i] === 4) ws++;
+    }
+    return out ? (100 * ws) / out : 0;
+  }
+
   async function agentFile(run, id) {
     const key = run + '/' + id;
     if (!D.files.has(key)) D.files.set(key, json(`agents/${run}/${id}.json`));
@@ -160,6 +172,6 @@ const Data = (() => {
              mm: String(min % 60).padStart(2, '0'), text: `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}` };
   }
 
-  return { D, TICKS, KX, ACTS, loadCore, loadRun, ensureUpTo, ready, path, along, state, tripsOf, agentFile, clock,
+  return { D, TICKS, KX, ACTS, loadCore, loadRun, ensureUpTo, ready, path, along, state, tripsOf, workSchoolShare, agentFile, clock,
            set onChunk(f) { onChunk = f; } };
 })();
